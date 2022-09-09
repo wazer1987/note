@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="mediaplayer"> 
+ <div class="video"> 
+ <video id="player" src="movie.mov" poster="mymovie.jpg" 
+ width="300" height="200"> 
+ Video player not available. 
+ </video> 
+ </div> 
+ <div class="controls"> 
+ <input type="button" value="Play" id="video-btn"> 
+ <span id="curtime">0</span>/<span id="duration">0</span> 
+ </div> 
+</div> 
+  <!-- <script>
+    let droptarget = document.getElementById("droptarget");
+    function handleEvent (event) {
+      let info = "",
+        output = document.getElementById("output"),
+        files, i, len;
+      event.preventDefault();
+      // console.log(event);
+      console.log(event.type,'==type');
+      if (event.type == "drop") {
+        files = event.dataTransfer.files;
+        i = 0;
+        len = files.length;
+        while (i < len) {
+          info += `${files[i].name} (${files[i].type}, ${files[i].size} bytes)<br>`;
+          i++;
+        }
+        output.innerHTML = info;
+      }
+    }
+    droptarget.addEventListener("dragenter", handleEvent);
+    droptarget.addEventListener("dragover", handleEvent);
+    droptarget.addEventListener("drop", handleEvent);
+
+  </script> -->
+  <!-- <script>
+    let filesList = document.getElementById("files-list");
+    filesList.addEventListener("change", (event) => {
+      let info = "",
+        output = document.getElementById("output"),
+        progress = document.getElementById("progress"),
+        files = event.target.files,
+        type = "default",
+        reader = new FileReader();
+      if (/image/.test(files[0].type)) {
+        reader.readAsDataURL(files[0]);
+        type = "image";
+      } else {
+        reader.readAsText(files[0]);
+        type = "text";
+      }
+      reader.onerror = function () {
+        output.innerHTML = "Could not read file, error code is " +
+          reader.error.code;
+      };
+
+      reader.onprogress = function (event) {
+        if (event.lengthComputable) {
+          progress.innerHTML = `${event.loaded}/${event.total}`;
+        }
+      };
+      reader.onload = function () {
+        let html = "";
+        switch (type) {
+          case "image":
+            html = `<img src="${reader.result}">`;
+            break;
+          case "text":
+            html = reader.result;
+            break;
+        }
+        output.innerHTML = html;
+      };
+    }); 
+  </script> -->
+</body>
+
+</html>

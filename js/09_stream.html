@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    async function* ints () {
+      // 每 1000 毫秒生成一个递增的整数
+      for (let i = 0; i < 5; ++i) {
+        yield await new Promise((resolve) => setTimeout(resolve, 1000, i));
+      }
+    }
+    const readableStream = new ReadableStream({
+      async start (controller) {
+        for await (let chunk of ints()) {
+          console.log(chunk);
+          controller.enqueue(chunk);
+        }
+        controller.close();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // let str = '/asds/wewqe/dasda/\/5423564.&*&%$#@\/.jpg'
+    let str1 = '/asds/wewqe/dasda/\/5423564.&*&%$#@\/.jpg'
+    let reg = /^(.+)\/(.+)(\.jpg)$/g
+    const arr  = reg.exec(str1);
+    console.log(arr[2]+arr[3]);
+    // console.log(str);
+    // let reg = //gi
+    // console.log(reg.exec(str));
+    // console.log(str.match(reg));
+// const worker = new Worker('globalScopeWorker.js'); 
+// console.log('created worker:', worker);
+// setTimeout(() => {
+//   console.log('created worker:', worker);
+// },1000)
+  </script>
+  <!-- <script>
+    let db,
+      request,
+      version = 1;
+    request = indexedDB.open("admin", version);
+    request.onerror = (event) =>
+      alert(`Failed to open: ${event.target.errorCode}`);
+    request.onsuccess = (event) => {
+      db = event.target.result;
+    };
+
+  </script>
+  <script>
+    Function.prototype.mycall = function (obj,...reset) {
+      obj.fn = this
+      obj.fn(...reset)
+    }
+    let obj = {
+      name:'张三',
+      sayName(num1,num2) {
+        console.log(this.name);
+        console.log(num1,num2);
+      }
+    }
+
+    let obj1 = {
+      name:'李四'
+    }
+
+    obj.sayName.mycall(obj1,1,2)
+
+
+    
+
+  </script> -->
+  <!-- <script>
+     window.addEventListener('error',(e) => {
+      console.log(e);
+    })
+    function process (values) {
+      values.sort();
+      for (let value of values) {
+        if (value > 100) {
+          return value;
+        }
+      }
+      return -1;
+    }
+    try{
+      process('2222')
+    }catch(e){
+      throw new Error(e)
+    }
+   
+  </script> -->
+</body>
+
+</html>

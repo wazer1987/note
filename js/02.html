@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>我是父窗口</h1>
+  <iframe src="./03.html" frameborder="0" id="iframe"></iframe>
+</body>
+<script>
+  let fm =document.getElementById('iframe')
+  let win = fm.contentWindow
+  console.log(win,'==win');
+  setTimeout(() => {
+    win.postMessage("A secret", "*"); 
+  },2000)
+  window.addEventListener('message',(data) => {
+    console.log(data,'===收到子窗口传递的消息');
+  })
+</script>
+</html> 

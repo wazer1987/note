@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <select name="sele" id="myselect">
+    <option value="1">男</option>
+  </select>
+  <iframe name="richedit" style="height: 100px; width: 100px"></iframe> 
+
+  <!-- <canvas id="drawing" width="600" height="600"></canvas> -->
+  <!-- <input type="text" value="sssssddf" id="inp"> -->
+  <!-- <img style="width:500px" src="./01e0c155438ba00000019ae99edfaa.jpg@1280w_1l_2o_100sh.jpg" alt=""> -->
+</body>
+<script> 
+ window.addEventListener("load", () => { 
+  console.log(frames,'===');
+ frames["richedit"].document.designMode = "on"; 
+ }); 
+</script> 
+<script>
+  
+  let myselect = document.getElementById('myselect')
+  console.log(myselect.options[0].text,myselect.options[0].value);
+  // let textBox = document.getElementById('inp')
+  // textBox.setSelectionRange(0, 3)
+  // console.log(textBox.selectionStart,textBox.selectionEnd);
+  let num = 0
+  switch (++num) {
+    case 0:
+      ++num
+      case 1:
+      ++num
+      case 5:
+      ++num
+      break;
+  }
+  console.log(num);
+</script>
+<script>
+//     let drawing = document.getElementById("drawing"); 
+//     let context = drawing.getContext("2d"); 
+//     // var img = document.createElement("img");
+//     // const img = document.getElementsByName('img')[0]
+//     // img.onload = function() {
+//     //   context.drawImage(img, 0, 0,400,400);
+//     // }
+//     const img = document.createElement('img')
+// img.onload = function() {
+//   context.drawImage(this, 0, 0,400,400);
+//   let imageData = context.getImageData(0, 0, img.width,  img.height)
+//   console.log(imageData);
+//   let data = imageData
+//   let i, len, average, 
+//  red, green, blue, alpha; 
+//   for (i=0, len=data.length; i < len; i+=4) { 
+//  red = data[i]; 
+//  green = data[i+1]; 
+//  blue = data[i+2]; 
+//  alpha = data[i+3]; 
+//  // 取得 RGB 平均值
+//  average = Math.floor((red + green + blue) / 3); 
+//  // 设置颜色，不管透明度
+//  data[i] = average; 
+//  data[i+1] = average; 
+//  data[i+2] = average; 
+//  } 
+//  imageData.data = data; 
+//  context.putImageData(imageData, img.width,  img.height);
+
+// }
+// img.src = "./01e0c155438ba00000019ae99edfaa.jpg@1280w_1l_2o_100sh.jpg";
+</script>
+
+</html>

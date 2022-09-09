@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+ <script>
+   document.body.innerHTML = `
+  <div onclick="console.log('Handled outside:', event.target)"></div>
+  `
+  // 添加影子 DOM 并向其中插入 HTML
+  document.querySelector('div').attachShadow({ mode: 'open' }).innerHTML = `
+  <button onclick="console.log('Handled inside:', event.target)">Foo</button>
+  `;
+ </script>
+  <!-- <script>
+    document.body.innerHTML = ` 
+<div> 
+ <p>Foo</p> 
+</div> 
+`; 
+document.querySelector('div') 
+ .attachShadow({ mode: 'open' }) 
+ .innerHTML = `<div id="bar"> 
+ <slot></slot> 
+ <div>` 
+  </script> -->
+  <!-- <script>
+    for (let color of ['red', 'green', 'blue']) {
+      const div = document.createElement('div');
+      const shadowDOM = div.attachShadow({ mode: 'open' });
+      document.body.appendChild(div);
+      shadowDOM.innerHTML = ` 
+ <p>Make me ${color}</p> 
+ <style> 
+ p { 
+ color: ${color}; 
+ } 
+ </style> 
+ `;
+    }
+
+  </script> -->
+</body>
+
+</html>
