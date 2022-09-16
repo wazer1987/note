@@ -91,3 +91,60 @@ Row(
 
 ```
 
+- Spacer
+
+```markdown
+1. 当我们是行布局 或者布局的时候 可以填补中间的空隙
+2. 用于填补空隙
+```
+
+```
+Container(
+    width: 295.w,
+    child: Row(
+      children: [
+        iconBtn(
+          'twitter',
+          () {
+            print('222');
+          },
+        ),
+        // 这里就可以 让按钮之间的空隙自动计算
+        Spacer(),
+        iconBtn(
+          'google',
+          () {},
+        ),
+        Spacer(),
+        iconBtn(
+          'facebook',
+          () {},
+        )
+      ],
+    ),
+  );
+```
+
+## 圆角图片
+
+```markdown
+1. 可以给container 容器 设置圆角
+2. 一定要加上裁切属性 clipBehavior: Clip.hardEdge,
+```
+
+```dart
+Container(
+          width: 335.w,
+          height: 290.h,
+          // 超出盒子区域裁切
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Image.network(
+            src,
+            fit: BoxFit.cover,
+          ),
+        ),
+```
+
