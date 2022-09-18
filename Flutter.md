@@ -2960,6 +2960,48 @@ class MyHome extends StatelessWidget {
   }
 ```
 
+- 挂载多个provider
+
+```dart
+// 这种挂在方式 是你的 数据模型已经实例过了
+runApp(MultiProvider(
+	providers:[
+    ChangeNotifierProvider<AppState>.value(
+    	value:AppState
+    )
+  ]
+))
+```
+
+- 自动触发
+
+```dart
+void main() => Global.init().then((e) => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AppState>.value(
+            value: Global.appState,
+          ),
+        ],
+        // 这里要用 Consumer 包裹 当我们的 数据模型变化的时候 会自动触发这里 把app 变成灰色
+        child: Consumer<AppState>(builder: (context, appState, _) {
+          if (appState.isGrayFilter) {
+            return ColorFiltered(
+              colorFilter: ColorFilter.mode(Colors.white, BlendMode.color),
+              child: MyApp(),
+            );
+          } else {
+            return MyApp();
+          }
+        }),
+      ),
+    ));
+```
+
+
+
+
+
 ## 路由与导航
 
 - 匿名路由
