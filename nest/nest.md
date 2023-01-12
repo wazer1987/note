@@ -948,3 +948,300 @@ bootstrap();
 
 ```
 
+## 拦截器
+
+```markdown
+1.  拦截器 需要手动调用 在会执行最终的处理程序 也就是 要在拦截器方法里调用 方法 来 执行最后的路由
+2.  拦截器 和守卫一样 分为 全局 和 controller 还是有 路由
+```
+
+### 定义
+
+```typescript
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+@Injectable()
+export class LoggingInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    // 进入 路由的时候 会先执行这个拦截器
+    console.log('Before...');
+
+    const now = Date.now();
+    console.log(now, '====now');
+    // 然后手动调用 next.handle() 函数 pipe 后面 是 当你路由程序执行完毕之后  在调用的函数
+    return next
+      .handle()
+      .pipe(tap(() => console.log(`After... ${Date.now() - now}ms`)));
+  }
+}
+```
+
+```typescript
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+
+@Injectable()
+export class LoggingInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    // 进入 路由的时候 会先执行这个拦截器
+    console.log('Before...');
+
+    const now = Date.now();
+    console.log(now, '====now');
+    // 然后手动调用 next.handle()  函数 pipe 后面 是 当你路由程序执行完毕之后  在调用的函数
+    //   next.handle() 可以理解为就是你的路由处理程序 pipe 就是 后续处理程序
+    return next.handle().pipe(
+      map((data) => {
+        console.log(data, '===data');
+        return data === '成功' ? '走拦截器' : '不走拦截器';
+      }),
+    );
+  }
+}
+```
+
+
+
+### 使用
+
+```typescript
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { LoggingInterceptor } from './interceptors';
+@Controller('interceptors')
+export class InterceptorsController {
+  // 进入这个路由的时候 会先进入到拦截器 然后拦截器 手动调用 执行这个路由的程序 
+  @UseInterceptors(LoggingInterceptor)
+  @Get()
+  interceptor() {
+    return '成功';
+  }
+}
+
+```
+
+```typescript
+// 在 controller 层使用
+@UseInterceptors(new LoggingInterceptor())
+export class CatsController {}
+
+// 在全局使用
+const app = await NestFactory.create(ApplicationModule);
+app.useGlobalInterceptors(new LoggingInterceptor());
+```
+
+## 自定义装饰器
+
+```markdown
+1. 我们可以 自定义类装饰器 和 参数装饰器等
+```
+
+### 定义
+
+```dart
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+// 这里的data: unknown 就是你传入装饰器的参数
+export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  // 拿到了 上下文对象 获取到了参数 user  
+  const request = ctx.switchToHttp().getRequest();
+  return request.user;
+});
+```
+
+### 使用
+
+```typescript
+// 这样直接就可以拿到 user 这个参数 不用在自己获取了
+@Get()
+async findOne(@User() user: UserEntity) {
+  console.log(user);
+}
+```
+
+### 实例
+
+```typescript
+// 假设这是前台传入的参数
+{
+  "id": 101,
+  "firstName": "Alan",
+  "lastName": "Turing",
+  "email": "alan@email.com",
+  "roles": ["admin"]
+}
+// 下面是我们的装饰器而当使用 我们需要获取 firstName 参数
+
+@Get()
+// 给我们的自定义装饰器 传入了参数 firstName
+async findOne(@User('firstName') firstName: string) {
+  console.log(`Hello ${firstName}`);
+}
+
+// 根据 装饰器传入的参数 返回 固定的数据
+
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
+export const User = createParamDecorator((data: string, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  const user = request.user;
+
+  return data ? user && user[data] : user;
+});
+```
+
+## 数据库的使用
+
+### Mongoose
+
+- 安装
+
+```typescript
+npm install --save @nestjs/mongoose mongoose
+```
+
+- 使用
+
+```markdown
+1. 首先我们需要 在我们的根路径中 创建数据库链接 
+2. 我们把我们的服务抽离成一个模块
+```
+
+```typescript
+// 根服务 app.module.ts
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+
+@Module({
+  // 建立数据库链接 和导入我们的模块 这我们链接的 test 库 UserModule 就是把我们的一个服务抽离除了一个模块
+  imports: [MongooseModule.forRoot('mongodb://localhost/test'), UserModule],
+  controllers: [AppController, InterceptorsController],
+  providers: [AppService],
+})
+export class AppModule {
+}
+
+```
+
+- UserModule 模块
+
+```markdown
+1.  跟我们的 app.module.ts 模块一样 里面也要注入自己的 contreoller 和 service等
+```
+
+```typescript
+import { Module } from '@nestjs/common';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserSchema } from './user.schema';
+@Module({
+  // 这里的 name:'User' 为数据库表名称与 service 中注入的表名称对应两者不一样会报错
+  // 这里就是 创建集合 集合名称叫做User 字段是下面的数据模型
+  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
+  // 注入我们的controller层   
+  controllers: [UserController],
+  // 注入我们的service层   
+  providers: [UserService],
+})
+export class UserModule {}
+```
+
+-  数据模型 user.schema.ts
+
+```typescript
+// 这一步 就是需要创建 集合里 具体的字段了 然后需要导出你的字段类 和 你的字段模型
+// 字段模型 是在 module文件里 创建结合的时候使用的  
+// 而 字段类 是在你 做增删改查的时候使用的
+user.schema.ts
+// 创建数据模型
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+export type UserDocument = User & Document;
+// 设置字段
+@Schema()
+export class User extends Document {
+  @Prop()
+  name: string;
+  // 设置值为必填
+  @Prop({ required: true })
+  age: number;
+  @Prop()
+  height: number;
+}
+// 创建集合 设置字段
+export const UserSchema = SchemaFactory.createForClass(User);
+```
+
+- 调用 service
+
+```markdown
+1. 创建好了数据类 和 我们就可以调用了
+```
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { User, UserDocument } from './user.schema';
+import { CreateUserDto } from './user.dto';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+@Injectable()
+export class UserService {
+  //@InjectModel  这里就是你要在哪个集合下面 创建数据 我们创建的集合名称叫User 所以这里我们在User下创建数据
+  constructor(@InjectModel('User') private userTest: Model<UserDocument>) {}
+  // 添加
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    // 根据数据模型 创建 实例
+    const createUser = new this.userTest(createUserDto);
+    // 保存到数据库
+    const temp = await createUser.save();
+    console.log(temp, '===temp'); //  创建的数据
+    return temp;
+  }
+}
+```
+
+- 调用 controller
+
+```markdown
+1. 我们 在 service 里 写好了增删改查的方法 是在路由里调用的 也就是controller 里使用
+```
+
+```typescript
+import { Controller, Get } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+  @Get()
+  async say() {
+    // 调用这样数据库 就创建了一条数据  
+    await this.userService.create({ name: 'nest', age: 18, height: 30 });
+    return '111';
+  }
+}
+
+```
+
+
+
+
+
+
+
