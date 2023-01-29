@@ -1,0 +1,18 @@
+1.进入到 mongodb的安装文件夹 /usr/local 
+2. 进入到MongoDB / bin 
+3. 输出 ./mongod 
+4. 然后配置 数据路径 ./mongod --dbpath '后面的是你设置的数据的文件夹'
+5. 以上mongoDB的服务就启动好了 
+6. 此时不要关闭 我们在bin下在开一个终端 启动一个客户端 ./mongo 
+7. 客户端就启动好了。然后 我们就可以使用命令了 show dbs之类的
+8. 也可以打开视图工具
+
+
+
+本机安装文件夹在 /usr/local/mongodb
+后台启动命令 mongod --dbpath /usr/local/var/mongodb --logpath /usr/local/var/log/mongodb/mongo.log --fork
+第一个路径是你数据的存储文件。第二个路径是你的日志路径 这个是后台启动
+
+然后查看 是否启动成功 ps aux | grep -v grep | grep mongod
+
+mongo 命令就是打开一个客户端 建立连接
